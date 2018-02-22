@@ -6,14 +6,23 @@ var userBadGuess = [];
 var win = 0;
 var guessRemain;
 
-// Create a function to generate a random game word and corresponding blanks
+// Create a function to generate a random game word
 function chooseWord() {
     gameWord = allWords[Math.floor(Math.random() * allWords.length)];
-    console.log("computer guess: " + gameWord);
+    
+    // Reset the blanks, bad guesses and result message from prior game
+    answerArray = [];
+    userBadGuess = [];
+    document.getElementById("divResultMessage").innerHTML = "";
+    
+    // Generate the corresponding blanks for the game word
     for (i = 0; i < gameWord.length; i++) {
         answerArray[i] = "_";
     }
+    
+    // Update blanks for new word and clear bad guesses
     document.getElementById("divCurrent").innerHTML = answerArray.join(" ");
+    document.getElementById("spanGuessInput").innerHTML = userBadGuess;
     
     // Give the user a number of guesses based on gameWord length
     guessRemain = gameWord.length + 5;
@@ -26,7 +35,6 @@ chooseWord();
 // Listen for input and format the case properly
 document.onkeyup = function (event) {
     var userGuess = String.fromCharCode(event.which).toUpperCase();
-    console.log("user guess: " + userGuess);
     var wasGoodGuess;
 
 // Ignore duplicate and non-letter input (come back to this part)
@@ -43,6 +51,7 @@ document.onkeyup = function (event) {
 // If all letters are revealed, the user wins. Determine by checking if answerArray contains no underscores
     if (answerArray.indexOf("_") === -1) {
         win++;
+        document.getElementById("divResultMessage").innerHTML = "You win!";
     }
 
 // If input is bad, then push into userBadGuess array and reduce guesses remaining
@@ -54,7 +63,7 @@ document.onkeyup = function (event) {
     // The user loses. Alert the user as such.
     else if (wasGoodGuess !== true && guessRemain === 1) {
         guessRemain--;
-        alert("You lose!");
+        document.getElementById("divResultMessage").innerHTML = "You lose!";
     }
 
     // Update results on screen
